@@ -27,7 +27,7 @@ const Exchanges = () => {
   }, []);
 
   if (error) {
-    return <Error message={"API is down!!!"} />;
+    return <Error message="API is down!!!" />;
   }
 
   return (
