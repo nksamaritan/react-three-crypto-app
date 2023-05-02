@@ -16,7 +16,7 @@ const Exchanges = () => {
       try {
         const { data } = await axios.get(`${server}/exchanges`);
         setExchanges(data);
-        setLoading(true);
+        setLoading(false);
       } catch (error) {
         setError(true);
         setLoading(false);
