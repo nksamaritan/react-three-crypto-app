@@ -3,7 +3,7 @@ import Header from "./components/Header";
 import Coins from "./components/Coins";
 import Exchanges from "./components/Exchanges";
 import Home from "./components/Home";
-// import Footer from "./components/Footer";
+import Footer from "./components/Footer";
 import CoinDetails from "./components/CoinDetails";
 
 function App() {
@@ -16,7 +16,7 @@ function App() {
         <Route path="/exchanges" element={<Exchanges />} />
         <Route path="/coin/:id" element={<CoinDetails />} />
       </Routes>
-      {/* <Footer /> */}
+      <Footer />
     </Router>
   );
 }

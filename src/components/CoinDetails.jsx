@@ -1,6 +1,7 @@
 import {
   Badge,
   Box,
+  Button,
   Container,
   HStack,
   Image,
@@ -21,20 +22,32 @@ import axios from "axios";
 import { server } from "..";
 import { useParams } from "react-router-dom";
 import Error from "./Error";
+import Chart from "./Chart";
 
 const CoinDetails = () => {
   const [coin, setCoin] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [currency, setCurrency] = useState("inr");
+  const [days, setDays] = useState("24h");
+  const [chartArray, setChartArray] = useState([]);
+
   const params = useParams();
   const currencySymbol =
     currency === "inr" ? "₹" : currency === "eur" ? "€" : "$";
+
+  const btns = ["24h", "7d", "30d", "60d", "200d", "365d", "max"];
+
   useEffect(() => {
     const fetchCoin = async () => {
       try {
         const { data } = await axios.get(`${server}/coins/${params.id}`);
+
+        const { data: chartData } = await axios.get(
+          `${server}/coins/${params.id}/market_chart?vs_currency=${currency}&days=${days}`
+        );
         setCoin(data);
+        setChartArray(chartData.prices);
         setLoading(false);
       } catch (error) {
         setError(true);
@@ -43,8 +56,44 @@ const CoinDetails = () => {
     };
 
     fetchCoin();
-  }, [params.id]);
+  }, [params.id, currency, days]);
 
+  const switchChartStats = (i) => {
+    switch (i) {
+      case "24h":
+        setDays("24h");
+        setLoading(true);
+        break;
+      case "7d":
+        setDays("7d");
+        setLoading(true);
+        break;
+      case "30d":
+        setDays("30d");
+        setLoading(true);
+        break;
+      case "60d":
+        setDays("60d");
+        setLoading(true);
+        break;
+      case "200d":
+        setDays("200d");
+        setLoading(true);
+        break;
+      case "365d":
+        setDays("365d");
+        setLoading(true);
+        break;
+      case "max":
+        setDays("max");
+        setLoading(true);
+        break;
+      default:
+        setDays("24h");
+        setLoading(true);
+        break;
+    }
+  };
   if (error) {
     return <Error message="API is down..." />;
   }
@@ -56,8 +105,16 @@ const CoinDetails = () => {
       ) : (
         <>
           <Box borderWidth={1} w={"full"}>
-            testing...
+            <Chart currency={currencySymbol} arr={chartArray} days={days} />
           </Box>
+
+          <HStack p="4" overflowX={"auto"}>
+            {btns.map((i) => (
+              <Button key={i} onClick={() => switchChartStats(i)}>
+                {i}
+              </Button>
+            ))}
+          </HStack>
 
           <RadioGroup value={currency} onChange={setCurrency} p={"8"}>
             <HStack spacing={"4"}>
@@ -67,7 +124,7 @@ const CoinDetails = () => {
             </HStack>
           </RadioGroup>
 
-          <VStack spacing={"4"} padding={"16"} alignItems={"flex-start"}>
+          <VStack spacing={"4"} padding={"10"} alignItems={"flex-start"}>
             <Text fontSize={"small"} alignSelf={"center"} opacity={"0.7"}>
               Last Updated on:{" "}
               {Date(coin.market_data.last_updated).split("G")[0]}
