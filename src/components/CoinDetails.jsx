@@ -115,8 +115,12 @@ const CoinDetails = () => {
                 value={`${currencySymbol}${coin.market_data.market_cap[currency]}`}
               />
               <Item
-                title={"Market Cap"}
-                value={`${currencySymbol}${coin.market_data.market_cap[currency]}`}
+                title={"All Time Low"}
+                value={`${currencySymbol}${coin.market_data.atl[currency]}`}
+              />
+              <Item
+                title={"All Time High"}
+                value={`${currencySymbol}${coin.market_data.ath[currency]}`}
               />
             </Box>
           </VStack>
